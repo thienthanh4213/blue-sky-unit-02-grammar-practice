@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Practice — Past Tenses & Articles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#7c3aed; --primary-dark:#6d28d9; --primary-light:#f3e8ff;
+  --blue:#1e40af; --green:#059669;
+  --bg:#f5f3ff; --card-bg:#ffffff; --text:#1e1b4b; --text-muted:#64748b;
+  --border:#e2e8f0; --correct:#10b981; --incorrect:#ef4444; --warn:#d97706; --partial:#ca8a04;
+  --font:'Outfit','Segoe UI',Arial,sans-serif;
+  --shadow:0 10px 25px -5px rgba(0,0,0,.05),0 8px 10px -6px rgba(0,0,0,.05);
+  --radius:16px;
+}
+.dark-theme{
+  --bg:#0f172a; --card-bg:#1e293b; --text:#f8fafc; --text-muted:#94a3b8;
+  --border:#334155; --primary-light:rgba(124,58,237,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
+.site-header{background:var(--primary);color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
+.unit-byline{font-size:.75rem;opacity:.72;letter-spacing:.02em;margin-bottom:3px;}
+.unit-title{font-size:1.25rem;font-weight:700;line-height:1.2;}
+.header-actions{display:flex;gap:8px;align-items:center;}
+.icon-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;height:38px;padding:0 14px;border-radius:9999px;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:var(--font);font-weight:600;font-size:.85rem;transition:.25s;}
+.icon-btn:hover{background:rgba(255,255,255,.28);}
+main{max-width:860px;margin:0 auto;padding:26px 18px 120px;}
+.intro{color:var(--text-muted);font-size:.92rem;margin-bottom:22px;line-height:1.55;}
+.intro b{color:var(--text);}
+.part-title{font-size:1.15rem;font-weight:800;color:var(--primary);margin:30px 0 4px;padding-bottom:8px;border-bottom:2px solid var(--primary-light);}
+.ex{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin-top:18px;box-shadow:var(--shadow);}
+.ex-head{font-weight:700;color:var(--blue);font-size:1rem;margin-bottom:4px;}
+.ex-sub{font-size:.85rem;color:var(--text-muted);margin-bottom:14px;font-style:italic;}
+.q{padding:11px 0;border-top:1px dashed var(--border);line-height:1.9;}
+.q:first-of-type{border-top:none;}
+.qnum{font-weight:700;color:var(--primary);margin-right:4px;}
+input.gap{font-family:var(--font);font-size:.95rem;font-weight:600;color:var(--primary-dark);background:transparent;border:none;border-bottom:2px solid var(--primary);width:175px;padding:2px 6px;text-align:center;transition:.2s;}
+.dark-theme input.gap{color:#c4b5fd;}
+input.gap.narrow{width:80px;}
+input.gap:focus{outline:none;background:var(--primary-light);}
+input.gap.correct{border-color:var(--correct);color:var(--correct);}
+input.gap.incorrect{border-color:var(--incorrect);color:var(--incorrect);}
+input.gap.partial{border-color:var(--partial);color:var(--partial);background:rgba(202,138,4,.09);}
+input.gap.unanswered{border-color:var(--warn);background:rgba(217,119,6,.08);}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.opt{border:1px solid var(--border);background:var(--card-bg);color:var(--text);padding:7px 14px;border-radius:10px;cursor:pointer;font-family:var(--font);font-size:.9rem;font-weight:500;transition:.2s;}
+.opt:hover{border-color:var(--primary);color:var(--primary);}
+.opt.sel{background:var(--primary);color:#fff;border-color:var(--primary);}
+.opt.correct{background:var(--correct);color:#fff;border-color:var(--correct);}
+.opt.incorrect{background:var(--incorrect);color:#fff;border-color:var(--incorrect);}
+.opt.unanswered{border-color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn);}
+.expl{display:none;margin-top:8px;font-size:.85rem;color:var(--green);background:rgba(5,150,105,.09);border-left:3px solid var(--green);padding:7px 12px;border-radius:0 8px 8px 0;}
+.expl.show{display:block;}
+.passage{line-height:2.6;font-size:.97rem;}
+.arrow{color:var(--text-muted);}
+.hintword{font-style:italic;color:var(--text-muted);font-size:.9rem;}
+.keyword{font-weight:800;color:var(--blue);letter-spacing:.03em;}
+.actionbar{position:fixed;bottom:0;left:0;right:0;background:var(--card-bg);border-top:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;box-shadow:0 -6px 20px -8px rgba(0,0,0,.15);z-index:90;}
+.btn{border:none;border-radius:12px;padding:11px 22px;font-family:var(--font);font-weight:700;font-size:.92rem;cursor:pointer;transition:.2s;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--primary-dark);}
+.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--primary);border-color:var(--primary);}
+.score{font-weight:800;font-size:1rem;color:var(--primary);min-width:120px;text-align:center;}
+.timer{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);border-radius:10px;padding:6px 14px;font-weight:800;font-size:1.05rem;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:#fff;}
+.timer.warn{background:#fb7185;border-color:#fb7185;animation:pulse 1s infinite;}
+@keyframes pulse{50%{opacity:.6;}}
+.student-bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;box-shadow:var(--shadow);}
+.student-bar label{font-weight:700;font-size:.9rem;color:var(--text);white-space:nowrap;}
+.student-bar input{font-family:var(--font);font-size:.95rem;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;flex:1;min-width:200px;background:var(--bg);color:var(--text);transition:.2s;}
+.student-bar input:focus{outline:none;border-color:var(--primary);background:var(--card-bg);}
+.name-warn{display:none;color:var(--incorrect);font-size:.85rem;font-weight:700;width:100%;}
+.incomplete-warn{display:none;width:100%;text-align:center;color:var(--warn);font-weight:700;font-size:.85rem;order:-1;}
+.submit-status{font-size:.78rem;font-weight:600;min-width:170px;text-align:center;line-height:1.4;}
+.submit-status.sending{color:var(--text-muted);}
+.submit-status.ok{color:var(--correct);}
+.submit-status.fail{color:var(--incorrect);}
+@media print{.site-header,.actionbar{position:static;}.actionbar{box-shadow:none;}.expl.show{display:block!important;}.icon-btn,.timer{display:none;}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div><div class="unit-byline">fce-20260623-summer-blue-sky</div><div class="unit-title">Unit 02 — Grammar Practice</div></div>
+  <div class="header-actions">
+    <span class="timer" id="timer">40:00</span>
+    <button class="icon-btn" onclick="window.print()">🖨️ In</button>
+    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
+  </div>
+</header>
+
+<main>
+  <p class="intro"><b>Grammar Practice — Past Tenses & Articles.</b> [FCE (B2)] Tổng: 40 câu. Past Tenses (20) · Articles (20). Chủ đề: Du lịch & mục tiêu cuộc đời (Bucket List Travel). Thời gian làm bài: <b>40 phút</b> (đồng hồ đếm ngược ở góc trên). Làm trực tiếp, bấm <b>Kiểm tra đáp án</b> ở dưới để chấm điểm và xem giải thích.</p>
+
+  <div class="student-bar">
+    <label for="studentName">👤 Họ tên học sinh:</label>
+    <input type="text" id="studentName" placeholder="Nhập họ tên của em..." autocomplete="name">
+    <span class="name-warn" id="nameWarn">⚠️ Vui lòng nhập họ tên trước khi nộp bài.</span>
+  </div>
+
+  <div id="ex-container"></div>
+</main>
+
+<div class="actionbar">
+  <div class="incomplete-warn" id="incompleteWarn"></div>
+  <button class="btn btn-primary" onclick="checkAll()">✓ Kiểm tra đáp án</button>
+  <button class="btn btn-ghost" onclick="resetAll()">↺ Làm lại</button>
+  <div class="score" id="score">— / 40</div>
+  <div class="submit-status" id="submitStatus"></div>
+</div>
+
+<script>
+/* ---------- DATA (generated from spec.json by build_html.py) ---------- */
+const DATA = [
+ {
+  "part": "PART A — Past Tenses (20 câu)"
+ },
+ {
+  "type": "gap",
+  "head": "Exercise 1: Put the verbs in brackets into the correct past tense (8 câu)",
+  "items": [
+   {
+    "q": "By the time we reached the summit, the sun [0] (already / set).",
+    "ans": [
+     [
+      "had already set"
+     ]
+    ],
+    "ex": "had already set — hành động xảy ra trước một mốc trong quá khứ → Past Perfect."
+   },
+   {
+    "q": "While we [0] (hike) up the mountain, it suddenly [1] (start) to snow.",
+    "ans": [
+     [
+      "were hiking"
+     ],
+     [
+      "started"
+     ]
+    ],
+    "ex": "were hiking / started — hành động đang diễn ra bị một hành động ngắn xen vào."
+   },
+   {
+    "q": "I [0] (never / visit) another continent before that trip.",
+    "ans": [
+     [
+      "had never visited"
+     ]
+    ],
+    "ex": "had never visited — trải nghiệm chưa từng có trước một mốc quá khứ → Past Perfect."
+   },
+   {
+    "q": "Last year, we [0] (travel) to three different countries.",
+    "ans": [
+     [
+      "travelled",
+      "traveled"
+     ]
+    ],
+    "ex": "travelled — hành động đã hoàn thành trong quá khứ, có mốc thời gian rõ ràng (last year)."
+   },
+   {
+    "q": "When I was younger, I [0] (dream) about seeing the Northern Lights.",
+    "ans": [
+     [
+      "used to dream",
+      "dreamed",
+      "dreamt"
+     ]
+    ],
+    "ex": "used to dream — thói quen/mong ước lặp lại trong quá khứ."
+   },
+   {
+    "q": "What [0] (you / do) when you finally crossed off your first bucket-list item?",
+    "ans": [
+     [
+      "were you doing"
+     ]
+    ],
+    "ex": "were you doing — hỏi về hành động đang diễn ra tại một thời điểm cụ thể trong quá khứ."
+   },
+   {
+    "q": "She [0] (save) money for two years before she finally booked the trip.",
+    "ans": [
+     [
+      "had been saving"
+     ]
+    ],
+    "ex": "had been saving — nhấn mạnh quá trình kéo dài trước một mốc trong quá khứ → Past Perfect Continuous."
+   },
+   {
+    "q": "We [0] (lose) our way in the old town, but a local kindly helped us.",
+    "ans": [
+     [
+      "lost"
+     ]
+    ],
+    "ex": "lost — hành động cụ thể, đã kết thúc trong quá khứ → Past Simple."
+   }
+  ]
+ },
+ {
+  "type": "mcq",
+  "head": "Exercise 2: Choose the correct option (6 câu)",
+  "items": [
+   {
+    "q": "By the time we arrived, the tour ______ already ______.",
+    "o": [
+     "was / starting",
+     "had / started",
+     "have / started"
+    ],
+    "a": 1,
+    "ex": "had started — hành động xảy ra trước một mốc trong quá khứ → Past Perfect."
+   },
+   {
+    "q": "We ______ across the desert for hours before we found water.",
+    "o": [
+     "walked",
+     "had been walking",
+     "have walked"
+    ],
+    "a": 1,
+    "ex": "had been walking — nhấn mạnh khoảng thời gian kéo dài trước một mốc quá khứ → Past Perfect Continuous."
+   },
+   {
+    "q": "When I was a teenager, I ______ to travel alone, but now I love it.",
+    "o": [
+     "was hating",
+     "used to hate",
+     "have hated"
+    ],
+    "a": 1,
+    "ex": "used to hate — thói quen/cảm xúc cũ nay đã thay đổi."
+   },
+   {
+    "q": "______ you ever climbed a mountain before that trip?",
+    "o": [
+     "Did",
+     "Had",
+     "Have"
+    ],
+    "a": 1,
+    "ex": "Had — hỏi về một hành động xảy ra trước một mốc trong quá khứ ('before that trip')."
+   },
+   {
+    "q": "I ______ my passport at home, so I couldn't check in.",
+    "o": [
+     "left",
+     "was leaving",
+     "had left"
+    ],
+    "a": 2,
+    "ex": "had left — hành động (bỏ quên) xảy ra trước hành động khác (couldn't check in) trong quá khứ."
+   },
+   {
+    "q": "They ______ camping every summer when they were children.",
+    "o": [
+     "would go",
+     "were going",
+     "have gone"
+    ],
+    "a": 0,
+    "ex": "would go — thói quen lặp lại trong quá khứ ('would' dùng cho hành động lặp lại, không dùng cho trạng thái)."
+   }
+  ]
+ },
+ {
+  "type": "gap",
+  "head": "Exercise 3: Find and correct the mistake (3 câu)",
+  "sub": "Gõ phần đã sửa cho đúng vào ô trống.",
+  "items": [
+   {
+    "q": "We were arrive at the airport two hours early. &nbsp;→ [0]",
+    "ans": [
+     [
+      "arrived"
+     ]
+    ],
+    "ex": "were arrive → arrived (Past Simple đơn giản, không cần 'were')."
+   },
+   {
+    "q": "By the time she finished packing, the taxi already left. &nbsp;→ [0]",
+    "ans": [
+     [
+      "had already left"
+     ]
+    ],
+    "ex": "already left → had already left (hành động xảy ra trước mốc 'by the time she finished' → Past Perfect)."
+   },
+   {
+    "q": "When I was young, I would have a fear of flying. &nbsp;→ [0]",
+    "ans": [
+     [
+      "used to have"
+     ]
+    ],
+    "ex": "would have → used to have ('would' không dùng cho trạng thái/tình trạng, chỉ dùng cho hành động lặp lại)."
+   }
+  ]
+ },
+ {
+  "type": "gap",
+  "head": "Exercise 4: Rewrite using the word given, 2–5 words (3 câu)",
+  "items": [
+   {
+    "q": "David doesn't travel alone now, but he did when he was younger. <b>USED</b><br>→ David [0] alone when he was younger.",
+    "ans": [
+     [
+      "used to travel"
+     ]
+    ],
+    "ex": "used to travel — thói quen cũ đã chấm dứt."
+   },
+   {
+    "q": "This was the first time she had visited South America. <b>NEVER</b><br>→ She [0] South America before.",
+    "ans": [
+     [
+      "had never visited"
+     ]
+    ],
+    "ex": "had never visited — lần đầu tiên → Past Perfect phủ định."
+   },
+   {
+    "q": "We got to the airport after the gate had closed. <b>BY</b><br>→ [0] the airport, the gate had already closed.",
+    "ans": [
+     [
+      "by the time we got to"
+     ]
+    ],
+    "ex": "by the time we got to — mốc thời gian trong quá khứ + Past Perfect ở mệnh đề còn lại."
+   }
+  ]
+ },
+ {
+  "part": "PART B — Articles (20 câu)"
+ },
+ {
+  "type": "passage",
+  "head": "Exercise 5: Complete the passage with a/an, the, or - (no article) (10 câu)",
+  "sub": "Đọc đoạn văn và điền mạo từ đúng (a/an, the) hoặc dấu '-' nếu không cần mạo từ.",
+  "text": "Last month, I finally ticked off [0] item from my bucket list: climbing [1] highest mountain in my country. I set off early with [2] guide I had hired online. [3] guide knew [4] mountain extremely well, since he had climbed it more than fifty times. On [5] way up, we stopped at [6] small village for lunch. [7] food there was simple but delicious. By [8] time we reached [9] summit, the view was absolutely breathtaking.",
+  "ans": [
+   [
+    "an"
+   ],
+   [
+    "the"
+   ],
+   [
+    "a"
+   ],
+   [
+    "The"
+   ],
+   [
+    "the"
+   ],
+   [
+    "the"
+   ],
+   [
+    "a"
+   ],
+   [
+    "The"
+   ],
+   [
+    "the"
+   ],
+   [
+    "the"
+   ]
+  ],
+  "exs": [
+   "1. an — lần đầu nhắc đến 'item', danh từ đếm được số ít bắt đầu bằng nguyên âm.",
+   "2. the — 'highest mountain' là cụm so sánh nhất, xác định duy nhất → the.",
+   "3. a — lần đầu nhắc đến 'guide'.",
+   "4. The — 'guide' đã được nhắc ở câu trước → the.",
+   "5. the — 'mountain' đã được nhắc đến trước đó → the.",
+   "6. the — 'way' cụ thể (con đường lên núi đã biết) → the.",
+   "7. a — lần đầu nhắc đến 'village'.",
+   "8. The — 'food' ở ngôi làng đó, đã xác định qua ngữ cảnh → the.",
+   "9. the — 'time' cụ thể trong cụm cố định 'by the time'.",
+   "10. the — 'summit' của ngọn núi cụ thể đã nhắc đến → the."
+  ]
+ },
+ {
+  "type": "mcq",
+  "head": "Exercise 6: Choose the correct option — a/an, the, or - (no article) (6 câu)",
+  "items": [
+   {
+    "q": "She's learning to play ______ violin for her music exam.",
+    "o": [
+     "a",
+     "the",
+     "-"
+    ],
+    "a": 1,
+    "ex": "the — tên nhạc cụ dùng 'the' (play the violin)."
+   },
+   {
+    "q": "We crossed ______ Sahara Desert on our trip through Africa.",
+    "o": [
+     "a",
+     "the",
+     "-"
+    ],
+    "a": 1,
+    "ex": "the — tên sa mạc/dãy núi dùng 'the' (the Sahara Desert)."
+   },
+   {
+    "q": "Have you ever climbed ______ Everest?",
+    "o": [
+     "a",
+     "the",
+     "-"
+    ],
+    "a": 2,
+    "ex": "- (không mạo từ) — tên đỉnh núi đơn lẻ không dùng mạo từ (Everest, Kilimanjaro)."
+   },
+   {
+    "q": "We usually have ______ breakfast at the hotel before sightseeing.",
+    "o": [
+     "a",
+     "the",
+     "-"
+    ],
+    "a": 2,
+    "ex": "- (không mạo từ) — tên bữa ăn thường không dùng mạo từ (have breakfast)."
+   },
+   {
+    "q": "She speaks ______ Portuguese fluently after living in Lisbon for years.",
+    "o": [
+     "a",
+     "the",
+     "-"
+    ],
+    "a": 2,
+    "ex": "- (không mạo từ) — tên ngôn ngữ không dùng mạo từ."
+   },
+   {
+    "q": "They sailed along ______ Amazon River for two weeks.",
+    "o": [
+     "a",
+     "the",
+     "-"
+    ],
+    "a": 1,
+    "ex": "the — tên sông dùng 'the' (the Amazon River)."
+   }
+  ]
+ },
+ {
+  "type": "gap",
+  "head": "Exercise 7: Correct the article mistakes (4 câu)",
+  "sub": "Gõ phần đã sửa cho đúng vào ô trống.",
+  "items": [
+   {
+    "q": "I would love to visit a Andes one day. &nbsp;→ [0]",
+    "ans": [
+     [
+      "the Andes"
+     ]
+    ],
+    "ex": "a Andes → the Andes (tên dãy núi số nhiều luôn dùng 'the')."
+   },
+   {
+    "q": "We had the lunch at a small café near the harbour. &nbsp;→ [0]",
+    "ans": [
+     [
+      "lunch"
+     ]
+    ],
+    "ex": "the lunch → lunch (tên bữa ăn không dùng mạo từ)."
+   },
+   {
+    "q": "He can play a guitar and the piano really well. &nbsp;→ [0]",
+    "ans": [
+     [
+      "the guitar"
+     ]
+    ],
+    "ex": "a guitar → the guitar (tên nhạc cụ dùng 'the')."
+   },
+   {
+    "q": "She wants to learn the French before her trip to Paris. &nbsp;→ [0]",
+    "ans": [
+     [
+      "French"
+     ]
+    ],
+    "ex": "the French → French (tên ngôn ngữ không dùng mạo từ)."
+   }
+  ]
+ }
+];
+
+/* ---------- GRADING (chấm câu điền từ — chấp nhận đáp án ngắn hoặc nguyên câu) ---------- */
+function baseNorm(s){
+  return String(s||'').trim().replace(/[’']/g,"'").replace(/\s+/g,' ').replace(/[—–]/g,'-');
+}
+function stripOptPeriod(s){ return s.replace(/\.$/,''); } // chỉ bỏ dấu chấm "." cuối câu — "?" và "!" giữ nguyên, bắt buộc khớp
+function matchScore(givenRaw, expected){
+  const given = stripOptPeriod(baseNorm(givenRaw));
+  const exp = stripOptPeriod(baseNorm(expected));
+  if(!given) return 0;
+  if(given.toLowerCase() !== exp.toLowerCase()) return 0;
+  if(given === exp) return 1;
+  const gw = given.split(' '), ew = exp.split(' ');
+  if(gw.length !== ew.length) return 1;
+  for(let i=0;i<ew.length;i++){
+    if(gw[i] === ew[i]) continue;
+    if(i===0) continue; // bỏ qua lỗi viết hoa/thường ở TỪ ĐẦU TIÊN (đầu câu quên viết hoa vẫn đúng)
+    return 0.5; // lệch viết hoa ở giữa câu (thường là tên riêng) — trừ 50%
+  }
+  return 1;
+}
+function extractContext(rawText, blankToken){
+  const idx = rawText.indexOf(blankToken);
+  if(idx === -1) return {prefix:'', suffix:''};
+  let before = rawText.slice(0, idx);
+  let after = rawText.slice(idx + blankToken.length);
+  const arrowIdx = before.lastIndexOf('→');
+  if(arrowIdx !== -1) before = before.slice(arrowIdx + 1);
+  const stripTags = s => s.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/\s+/g,' ');
+  before = stripTags(before);
+  after = stripTags(after).replace(/^\s*\([^)]*\)\s*/, ' ');
+  return {prefix: before, suffix: after};
+}
+function creditFor(givenRaw, acceptedList, prefix, suffix){
+  let best = 0;
+  (acceptedList||[]).forEach(acc=>{
+    best = Math.max(best, matchScore(givenRaw, acc));
+    best = Math.max(best, matchScore(givenRaw, (prefix||'')+acc+(suffix||'')));
+  });
+  return best;
+}
+function fmtNum(n){
+  const r = Math.round(n*100)/100;
+  if(Number.isInteger(r)) return String(r);
+  let s = r.toFixed(2);
+  if(s.endsWith('0')) s = s.slice(0,-1);
+  return s.replace('.', ',');
+}
+
+/* ---------- RENDER ---------- */
+const shortHead = h => h.replace(/^Exercise\s*(\d+):\s*/i,'Ex$1: ').replace(/\s*\(\d+\s*câu\)\s*$/i,'').trim();
+let questions=[]; // each = one gradable "câu"
+const container=document.getElementById('ex-container');
+
+DATA.forEach(block=>{
+  if(block.part){ const h=document.createElement('div');h.className='part-title';h.innerHTML=block.part;container.appendChild(h);return;}
+  const ex=document.createElement('div');ex.className='ex';
+  const head=document.createElement('div');head.className='ex-head';head.innerHTML=block.head;ex.appendChild(head);
+  if(block.sub){const s=document.createElement('div');s.className='ex-sub';s.textContent=block.sub;ex.appendChild(s);}
+  const exLabel = block.head ? shortHead(block.head) : '';
+
+  if(block.type==='gap'){
+    block.items.forEach((it,i)=>{
+      const q=document.createElement('div');q.className='q';
+      let html='<span class="qnum">'+(i+1)+'.</span> '+it.q;
+      html=html.replace(/\[(\d+)\]/g,(m,idx)=>`<input class="gap" data-blank="${idx}">`);
+      q.innerHTML=html;
+      const expl=document.createElement('div');expl.className='expl';expl.textContent=it.ex||'';q.appendChild(expl);
+      const blanks=it.ans.map((acc,bi)=>{
+        const ctx=extractContext(it.q, '['+bi+']');
+        return {el:q.querySelector(`input[data-blank="${bi}"]`),acc,prefix:ctx.prefix,suffix:ctx.suffix};
+      });
+      questions.push({kind:'gap',blanks,expl,label:exLabel+' — câu '+(i+1)});
+      ex.appendChild(q);
+    });
+  }
+  else if(block.type==='mcq'){
+    block.items.forEach((it,i)=>{
+      const q=document.createElement('div');q.className='q';
+      q.innerHTML='<span class="qnum">'+(i+1)+'.</span> '+it.q;
+      const opts=document.createElement('div');opts.className='opts';
+      const rec={kind:'mcq',sel:-1,a:it.a,o:it.o,btns:[],expl:null,label:exLabel+' — câu '+(i+1)};
+      it.o.forEach((o,oi)=>{
+        const b=document.createElement('button');b.className='opt';b.textContent=String.fromCharCode(65+oi)+'. '+o;
+        b.onclick=()=>{rec.btns.forEach(x=>x.classList.remove('sel'));b.classList.add('sel');rec.sel=oi;};
+        opts.appendChild(b);rec.btns.push(b);
+      });
+      q.appendChild(opts);
+      const expl=document.createElement('div');expl.className='expl';expl.textContent=it.ex||'';q.appendChild(expl);
+      rec.expl=expl;
+      questions.push(rec);
+      ex.appendChild(q);
+    });
+  }
+  else if(block.type==='passage'){
+    const p=document.createElement('div');p.className='q passage';
+    p.innerHTML=block.text.replace(/\[(\d+)\]/g,(m,idx)=>`<input class="gap" data-blank="${idx}">`);
+    ex.appendChild(p);
+    const expWrap=document.createElement('div');expWrap.className='expl';expWrap.innerHTML=block.exs.join('<br>');
+    block.ans.forEach((acc,bi)=>{
+      const el=p.querySelector(`input[data-blank="${bi}"]`);
+      const ctx=extractContext(block.text, '['+bi+']');
+      questions.push({kind:'gap',blanks:[{el,acc,prefix:ctx.prefix,suffix:ctx.suffix}],expl:expWrap,label:exLabel+' — chỗ trống '+(bi+1)});
+    });
+    ex.appendChild(expWrap);
+  }
+  container.appendChild(ex);
+});
+const TOTAL=questions.length;
+document.getElementById('score').textContent='— / '+TOTAL;
+
+/* ---------- TIMER (đếm ngược 40 phút) ---------- */
+const TOTAL_TIME_SECONDS=40*60;
+let remainingSeconds=TOTAL_TIME_SECONDS, elapsedSeconds=0, timerId=null, submitted=false;
+function fmtTime(sec){
+  const m=String(Math.floor(sec/60)).padStart(2,'0');
+  const s=String(sec%60).padStart(2,'0');
+  return m+':'+s;
+}
+function updateTimerDisplay(){
+  const el=document.getElementById('timer');
+  el.textContent=fmtTime(Math.max(remainingSeconds,0));
+  el.classList.toggle('warn',remainingSeconds<=300&&remainingSeconds>0);
+}
+function startTimer(){
+  if(timerId)return;
+  timerId=setInterval(()=>{
+    remainingSeconds--;
+    elapsedSeconds=TOTAL_TIME_SECONDS-remainingSeconds;
+    updateTimerDisplay();
+    if(remainingSeconds<=0){
+      stopTimer();
+      if(!submitted)checkAll(); // hết giờ tự động nộp bài (nếu chưa điền tên, sẽ nhắc điền tên)
+    }
+  },1000);
+}
+function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null;} }
+
+/* ---------- SUBMIT TO GOOGLE APPS SCRIPT (bỏ qua nếu spec.json không cấu hình script_url) ---------- */
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbysiCrvqhRHYIKNSlps33DedN4CUU4VMEF42mclX1YJIb7hhMe5kq3BpWUePjGOyDg9/exec';
+function sendResultToServer(name,score,total,timeSec,details){
+  if(!SCRIPT_URL) return; // chưa cấu hình script_url — chỉ chấm điểm tại chỗ, không gửi đi đâu
+  const statusEl=document.getElementById('submitStatus');
+  statusEl.textContent='📤 Đang gửi kết quả...';
+  statusEl.className='submit-status sending';
+  const payload=new URLSearchParams({
+    kind:'practice',
+    name:name,
+    class:'fce-20260623-summer-blue-sky',
+    unit:'Unit 02 — Grammar Practice',
+    level:'FCE (B2)',
+    score:String(score),
+    total:String(total),
+    timeSeconds:String(timeSec),
+    timeFormatted:fmtTime(timeSec),
+    timestamp:new Date().toISOString(),
+    detailsJson:JSON.stringify(details||[])
+  });
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:payload})
+    .then(()=>{ statusEl.textContent='✅ Đã gửi kết quả về giáo viên.'; statusEl.className='submit-status ok'; })
+    .catch(()=>{ statusEl.textContent='⚠️ Gửi kết quả thất bại (kiểm tra mạng). Điểm vẫn hiển thị ở trên.'; statusEl.className='submit-status fail'; });
+}
+
+/* ---------- CHECK ---------- */
+function checkAll(){
+  const nameEl=document.getElementById('studentName');
+  const name=(nameEl.value||'').trim();
+  const nameWarn=document.getElementById('nameWarn');
+  if(!name){
+    nameWarn.style.display='block';
+    nameEl.focus();
+    nameEl.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  nameWarn.style.display='none';
+
+  // Không bắt buộc làm hết mới được kiểm tra — chỉ đánh dấu và không tính điểm
+  // cho câu bỏ trống. Giải thích chỉ hiện với câu học sinh đã thực sự làm.
+  const incompleteWarn=document.getElementById('incompleteWarn');
+  let correct=0, missingCount=0;
+  const details=[];
+  questions.forEach((it,idx)=>{
+    if(it.kind==='gap'){
+      let attempted=false;
+      const given=[], acc0=[];
+      let creditSum=0;
+      it.blanks.forEach(bl=>{ if((bl.el.value||'').trim())attempted=true; });
+      it.blanks.forEach(bl=>{
+        const raw=bl.el.value||'';
+        bl.el.classList.remove('correct','incorrect','partial','unanswered');
+        if(!raw.trim()){
+          bl.el.classList.add('unanswered');
+        } else {
+          const cr=creditFor(raw,bl.acc,bl.prefix,bl.suffix);
+          creditSum+=cr;
+          bl.el.classList.add(cr>=1?'correct':(cr>0?'partial':'incorrect'));
+        }
+        given.push(raw?raw:'(bỏ trống)');
+        acc0.push(bl.acc[0]);
+      });
+      const cauCredit=it.blanks.length?creditSum/it.blanks.length:0;
+      correct+=cauCredit;
+      if(!attempted)missingCount++;
+      if(it.expl)it.expl.classList.toggle('show',attempted);
+      details.push({no:idx+1,label:it.label||'',given:given.join(' | '),answer:acc0.join(' | '),correct:Math.round(cauCredit*100)/100});
+    } else {
+      const attempted=it.sel!==-1;
+      it.btns.forEach((b,bi)=>{
+        b.classList.remove('correct','incorrect','unanswered');
+        if(!attempted){ b.classList.add('unanswered'); }
+        else if(bi===it.a){ b.classList.add('correct'); }
+        else if(bi===it.sel){ b.classList.add('incorrect'); }
+      });
+      const ok=attempted&&it.sel===it.a;
+      if(ok)correct++;
+      if(!attempted)missingCount++;
+      if(it.expl)it.expl.classList.toggle('show',attempted);
+      details.push({no:idx+1,label:it.label||'',given:it.sel>=0?it.o[it.sel]:'(chưa chọn)',answer:it.o[it.a],correct:ok?1:0});
+    }
+  });
+  document.getElementById('score').textContent=fmtNum(correct)+' / '+TOTAL;
+
+  if(missingCount>0){
+    incompleteWarn.textContent=`ℹ️ Còn ${missingCount} câu bạn chưa làm — những câu đó chưa hiện giải thích và chưa được tính điểm.`;
+    incompleteWarn.style.display='block';
+  } else {
+    incompleteWarn.style.display='none';
+  }
+
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  if(!submitted){
+    submitted=true;
+    stopTimer();
+    sendResultToServer(name,Math.round(correct*100)/100,TOTAL,elapsedSeconds,details);
+  }
+}
+function resetAll(){
+  questions.forEach(it=>{
+    if(it.kind==='gap'){it.blanks.forEach(bl=>{bl.el.value='';bl.el.classList.remove('correct','incorrect','partial','unanswered');});}
+    else{it.sel=-1;it.btns.forEach(b=>b.classList.remove('sel','correct','incorrect','unanswered'));}
+    if(it.expl)it.expl.classList.remove('show');
+  });
+  document.getElementById('score').textContent='— / '+TOTAL;
+  document.getElementById('submitStatus').textContent='';
+  document.getElementById('nameWarn').style.display='none';
+  document.getElementById('incompleteWarn').style.display='none';
+  submitted=false;
+  remainingSeconds=TOTAL_TIME_SECONDS;
+  elapsedSeconds=0;
+  updateTimerDisplay();
+  stopTimer();
+  startTimer();
+}
+function toggleTheme(){
+  document.body.classList.toggle('dark-theme');
+  document.getElementById('themeBtn').textContent=document.body.classList.contains('dark-theme')?'☀️ Light':'🌙 Dark';
+}
+
+updateTimerDisplay();
+startTimer();
+</script>
+</body>
+</html>
